@@ -205,7 +205,10 @@ impl Client {
     ) -> Result<T, BybitError> {
         match response.status() {
             StatusCode::OK => {
-                let response = response.json::<T>().await?;
+                let txt = response.text().await?;
+                println!("{txt}");
+
+                let response: T = serde_json::from_str(&txt)?;
                 Ok(response)
             }
             StatusCode::BAD_REQUEST => {
